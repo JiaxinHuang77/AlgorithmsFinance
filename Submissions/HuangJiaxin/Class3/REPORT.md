@@ -26,7 +26,7 @@ Jiaxin Huang, 27 November 2026. Code: `put.py`, `data.py`; raw results: `results
 * **Why two arrays are enough** (slide 26): at date t, node j reads V[j] and V[j+1]
   (date t+1). Going through j in increasing order, V[j] is overwritten only after its
   last use, and V[j+1] is still the date t+1 value when it is read.
-* **Evidence** (166 tests, `evidence/step4_tests_after_implementation.txt`):
+* **Evidence** (166 tests, `evidence/final_tests.txt`; 163 at step 4, before my hand trace was added):
   * the slide example gives exactly 1175/147 = 7.9932 (European 6.2925);
   * **my hand trace** of a three-period tree (`TRACE.md`: value 23.2, boundary none,
     50, 25, 50; European 15.2) is a test for all three versions;
@@ -38,6 +38,10 @@ Jiaxin Huang, 27 November 2026. Code: `put.py`, `data.py`; raw results: `results
     value compared); five-year scale has no underflow or overflow (S0 d^N ≈ 1e−235);
   * calibration: sample standard deviation (N − 1), u d = 1, 0 < q < 1, row counting.
   * Tests were written first and failed on stubs (`evidence/step3_...`, 159 failed).
+  * Independent check in review: the course's own `price_american_put` in
+    `Class3/class3_evidence.py`, with volatility recomputed by numpy from the CSV files,
+    gives the same one-year values for Bitcoin, gold (PAXG) and SNX to a relative
+    difference below 2e-14.
 
 ## 3. Algorithms and their cost (theory)
 
@@ -68,6 +72,11 @@ numpy 2.5.5, code `2f6683c` (`results/environment.json`, `results/run_log.txt`).
 * The boundary first appears at t = 137 (6 Nov 2025, about 58,300) in the one-year
   window and rises towards K at expiry (figure). Bitcoin first fell to the boundary on
   2 June 2026; the holder would have exercised then.
+* The boundary is a tree price, so it moves in steps of one tree step (a factor e^s,
+  0.46 %) and zig-zags between consecutive hours: prices on even and odd dates lie on
+  different levels of the lattice. Compared every second hour it never decreases (checked
+  on both Bitcoin windows), as theory expects for a put: the closer to expiry, the higher
+  the price at which exercising becomes optimal.
 * In the five-year window the holder would have exercised in the 2022 crash, although
   Bitcoin ended **above** the strike (77,582 > 61,560): early exercise locks in the
   payoff, and a later recovery does not take it back.

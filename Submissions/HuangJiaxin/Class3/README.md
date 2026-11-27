@@ -19,7 +19,7 @@ versions used. A virtual environment outside the repository keeps things clean:
 python3 -m pip install -r Submissions/HuangJiaxin/Class3/requirements.txt
 python3 -m pytest -q Submissions/HuangJiaxin/Class3            # expected: 166 passed
 python3 Submissions/HuangJiaxin/Class3/run_lab.py --quick       # small check, seconds
-python3 Submissions/HuangJiaxin/Class3/run_lab.py               # all tasks, about 25 minutes
+python3 Submissions/HuangJiaxin/Class3/run_lab.py               # all tasks, about 13 minutes on my MacBook Air
 python3 Submissions/HuangJiaxin/Class3/plot_btc.py              # figures from saved results
 python3 Submissions/HuangJiaxin/Class3/profile_put.py           # cProfile, one Bitcoin year
 ```
@@ -38,7 +38,7 @@ python3 Submissions/HuangJiaxin/Class3/profile_put.py           # cProfile, one 
 | `run_lab.py` | Runs the six lab tasks and the extras; writes `results/` |
 | `plot_btc.py` | Extra 5: Bitcoin price path with the early-exercise boundary |
 | `profile_put.py` | cProfile of the plain and numpy versions (shares of time only) |
-| `evidence/` | Test output before (step 3, on stubs) and after (step 4) the implementation |
+| `evidence/` | Test output before (step 3, on stubs, 159 failed) and after (step 4, 163 passed) the implementation; `final_tests.txt`: 166 passed after adding my hand trace as a test |
 | `results/` | Raw measurements (CSV), figures, profiles, `environment.json`, `run_log.txt` |
 | `REPORT.md` | Short report: method, correctness, results table, predictions vs results, limitations, use of AI |
 
