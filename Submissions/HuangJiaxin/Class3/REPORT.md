@@ -196,4 +196,47 @@ My predictions (`PREDICTIONS.md`, committed before the measurements):
 
 ## 9. Use of AI
 
-*To be written by Jiaxin.*
+I used Claude (Anthropic) as a coding assistant.
+
+**What the AI did.** It drafted most of the code: data loading and calibration
+(`data.py`), the three pricing versions (`put.py`), the tests including an exact
+independent reference, the measurement, figure and profiling scripts, and first drafts
+of the README and this report.
+
+**What I did myself.**
+* I chose the way of working (the AI writes the code, I do the key parts) and chose
+  extras 1, 2 and 5 from the seven the AI proposed.
+* I traced a three-period tree by hand (`TRACE.md`). I corrected my own mistakes on the
+  way: a continuation value of 25 instead of 55, an exercise payoff of 50 instead of 0 at
+  t = 0, and the boundary written as the payoff (75) instead of the stock price (25). My
+  final result (23.2) matches the code and is now a test.
+* I wrote and committed my predictions before the measurements. My first answers to
+  questions 1 and 4 ("x to the power 5", "N² times") were wrong; after hints I corrected
+  them to 25 and 4 times, and kept the mistakes in `PREDICTIONS.md`.
+* I ran all measurements on my own Mac (with my own Python environment) and compared
+  the results with my predictions: five of six were right.
+
+**Accepted.** Vectorizing the recurrence with numpy one date at a time, while keeping the
+plain-Python version as the tested reference.
+
+**Corrected.** Running the tests and checking the results found these AI mistakes:
+`Fraction(1.2)` is not exactly 6/5 (fixed with `Fraction("1.2")`); one test could pass
+without comparing values because of an `or` (made stricter); one test called a function
+with the wrong arguments; the pinned numpy version did not support Python 3.14 on my Mac
+(replaced by the installed versions); the five-year figure's legend hid the 2022 price
+path (moved below the plot); and a background run started by the AI was stopped by its
+environment, so I ran the measurements in my own terminal.
+
+**Rejected.** I did not do the other four extras the AI proposed (a separate plain vs
+numpy study, a Black–Scholes comparison, a summary table, Docker).
+
+**What I learned.**
+1. The early-exercise premium is driven by the interest rate: at 4 % a year, receiving K
+   early earns little, so the premium is small.
+2. It is a larger share of the value for calm assets (gold 19 %, Bitcoin 9.7 %), the
+   opposite of my prediction.
+3. numpy's time grew less than 25 times because every date has a fixed overhead, which
+   matters most at small N.
+4. Storing the whole tree costs N² memory (×4 per doubling of N, about 62 GB for five
+   years); keeping only one date in two arrays needs 2.5 MB. This is the point of storing
+   only the layer that dynamic programming still needs.
