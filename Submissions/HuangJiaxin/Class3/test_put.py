@@ -89,6 +89,16 @@ def test_slide_example_european(name):
     assert all(x is None or math.isnan(x) for x in b[:-1])      # never exercised early
 
 
+# ---------------------------------------------------------------- Jiaxin's hand trace
+@pytest.mark.parametrize("name", PRICERS)
+def test_jiaxin_hand_trace(name):
+    """Three-period tree traced by hand in TRACE.md (S0 = K = 100, u = 2, d = 0.5, R = 1.25)."""
+    v, b = PRICERS[name](S0=100, K=100, u=2, d=0.5, R=1.25, N=3)
+    assert v == pytest.approx(23.2)
+    same_boundary(b, [None, 50, 25, 50])
+    assert exact_tree(S0=100, K=100, u=2, d=0.5, R=1.25, N=3)[0] == Fr(116, 5)
+
+
 # ---------------------------------------------------------------- edge cases
 @pytest.mark.parametrize("name", PRICERS)
 @pytest.mark.parametrize("S0, want", [(90, 10), (110, 0), (100, 0)])
