@@ -22,6 +22,7 @@ python3 Submissions/HuangJiaxin/Class3/run_lab.py --quick       # small check, s
 python3 Submissions/HuangJiaxin/Class3/run_lab.py               # all tasks, about 13 minutes on my MacBook Air
 python3 Submissions/HuangJiaxin/Class3/plot_btc.py              # figures from saved results
 python3 Submissions/HuangJiaxin/Class3/profile_put.py           # cProfile, one Bitcoin year
+streamlit run Submissions/HuangJiaxin/Class3/dashboard.py       # dashboard from saved results
 ```
 
 `run_lab.py` overwrites `results/`. The figures are drawn from the saved CSV files only.
@@ -38,6 +39,7 @@ python3 Submissions/HuangJiaxin/Class3/profile_put.py           # cProfile, one 
 | `run_lab.py` | Runs the six lab tasks and the extras; writes `results/` |
 | `plot_btc.py` | Extra 5: Bitcoin price path with the early-exercise boundary |
 | `profile_put.py` | cProfile of the plain and numpy versions (shares of time only) |
+| `dashboard.py` | Streamlit dashboard (extra): overview, runtime, memory, Bitcoin boundary, all 40 assets, predictions vs results, correctness; reads `results/` only |
 | `evidence/` | Test output before (step 3, on stubs, 159 failed) and after (step 4, 163 passed) the implementation; `final_tests.txt`: 166 passed after adding my hand trace as a test |
 | `results/` | Raw measurements (CSV), figures, profiles, `environment.json`, `run_log.txt` |
 | `REPORT.md` | Short report: method, correctness, results table, predictions vs results, limitations, use of AI |

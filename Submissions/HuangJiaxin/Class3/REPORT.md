@@ -85,8 +85,8 @@ numpy 2.5.5, code `2f6683c` (`results/environment.json`, `results/run_log.txt`).
 
 | Window | Exercised early | Put value, % of S0 (min / median / max) | Premium, % of American value (min / median / max) |
 |---|---|---|---|
-| One year | 36 of 40 (never: NEAR, TRX, UNI, ZEC) | 7.9 / 29.3 / 49.1 | 1.2 / 1.6 / 5.0 |
-| Five years | 36 of 40 (never: BNB, PAXG, TRX, XRP) | 12.7 / 61.7 / 70.0 | 8.1 / 8.1 / 19.3 |
+| One year | 36 of 40 (never: NEAR, TRX, UNI, ZEC) | 7.9 / 29.1 / 49.1 | 1.2 / 1.6 / 5.0 |
+| Five years | 36 of 40 (never: BNB, PAXG, TRX, XRP) | 12.7 / 61.4 / 70.0 | 8.1 / 8.1 / 19.3 |
 
 Every exercise happened before expiry. In the one-year window the 36 exercised assets
 are exactly the 36 that ended below the strike; in the five-year window two assets
@@ -113,7 +113,7 @@ Reading the 40 files took 1.9 to 2.0 s and is not included. Plain Python and the
 and three repeats, all saved.
 
 * **Growth from one to five years** (N × 5.00, so Θ(N²) predicts × 25.0):
-  plain Python × 22.4, numpy × 17.0, 40 assets × 17.4.
+  plain Python × 22.4, numpy × 16.9, 40 assets × 17.4.
 * **Plain Python is close to N²**: about 152 ns per node at one year and 136 ns at five
   years: each node is a handful of Python operations.
 * **numpy is below 25 because of a fixed cost per date.** Fitting time = a·N + b·N²/2 to
@@ -146,7 +146,7 @@ with Bitcoin's volatility:
 | N | Nodes | Full tree | Factor vs previous N | Two arrays (numpy) |
 |---|---|---|---|---|
 | 250 | 31,626 | 2.1 MB | | 0.018 MB |
-| 500 | 125,751 | 8.3 MB | × 3.94 | 0.035 MB |
+| 500 | 125,751 | 8.3 MB | × 3.93 | 0.035 MB |
 | 1,000 | 501,501 | 32.8 MB | × 3.97 | 0.068 MB |
 | 2,000 | 2,003,001 | 130.4 MB | × 3.98 | 0.134 MB |
 | 4,000 | 8,006,001 | 520.9 MB | × 3.99 | 0.266 MB |
@@ -176,10 +176,10 @@ My predictions (`PREDICTIONS.md`, committed before the measurements):
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 1 | Five years take about 25 times as long | plain × 22.4, numpy × 17.0 | Right for plain Python; numpy lower because of a fixed cost per date (5.1) |
+| 1 | Five years take about 25 times as long | plain × 22.4, numpy × 16.9 | Right for plain Python; numpy lower because of a fixed cost per date (5.1) |
 | 2 | numpy is tens of times faster | 32 to 42 times | Correct |
 | 3 | Two arrays fit easily in 3 GB | 2.5 MB (Bitcoin), 3.3 MB (40 assets) | Correct; the peak is a few times my 0.7 MB estimate because of numpy temporaries |
-| 4 | Full tree: × 4 per doubling of N | × 3.94 to × 3.99 | Correct |
+| 4 | Full tree: × 4 per doubling of N | × 3.93 to × 3.99 | Correct |
 | 5 | Premium about one third of the value or larger | 2.6 % (one year), 9.7 % (five years) for Bitcoin; largest for gold | **Wrong**: the premium comes from earning interest on K earlier; at 4 % a year (about 0.0005 % per hour) it is small, and it is a larger share for calm assets, not volatile ones |
 | 6 | The Bitcoin holder exercises early | Yes, 2 June 2026, payoff 41,589 | Correct |
 
@@ -190,6 +190,11 @@ My predictions (`PREDICTIONS.md`, committed before the measurements):
 3. **Bitcoin figures**: `results/btc_1y_boundary.png` and `results/btc_5y_boundary.png`:
    price path, boundary, strike and first exercise (drawn from the saved CSV files by
    `plot_btc.py`).
+4. **Dashboard** (`dashboard.py`, Streamlit, added after the lab): runtime with the fitted
+   cost model, memory with the full-tree projection, an interactive Bitcoin boundary
+   chart, all 40 assets (premium vs volatility), predictions vs results and the
+   correctness checks. It reads the saved results only and computes the ratios from them;
+   building it found two wrong medians in the first version of this report (fixed).
 
 ## 8. Limitations
 
