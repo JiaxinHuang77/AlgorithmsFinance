@@ -162,13 +162,17 @@ def test_numpy_matches_plain_on_realistic_trees(n, s):
     assert math.isclose(vp, vn, rel_tol=1e-9)
     assert len(bp) == len(bn) == n + 1
     for x, y in zip(bp, bn):
-        assert (x is None) == math.isnan(y) or math.isclose(x, y, rel_tol=1e-6)
+        if x is None:
+            assert math.isnan(y)
+        else:
+            assert math.isclose(x, y, rel_tol=1e-9)
 
 
 def test_five_year_scale_has_no_overflow_or_underflow():
     """s * N = 541 for the most volatile asset: S0 * d^N is about 1e-235 (limit 1e-308)."""
     n, s = 43822, 0.01235
-    lo, hi = put.tree_prices(100.0, math.exp(s), math.exp(-s), n, n)[[0, -1]]
+    prices = put.tree_prices(100.0, math.exp(s), math.exp(-s), n)
+    lo, hi = prices[0], prices[-1]
     assert 0 < lo < 1e-200 and math.isfinite(hi) and hi > 1e200
 
 
