@@ -30,7 +30,7 @@ def plot(label):
     ex = next((t for t in range(1, len(rows))
                if bound[t] == bound[t] and price[t] <= bound[t] and K - price[t] > 0), None)
 
-    fig, ax = plt.subplots(figsize=(10, 5))
+    fig, ax = plt.subplots(figsize=(10, 5.6))
     ax.plot(times, price, color="#1f4e79", lw=1, label="Bitcoin close (USDT)")
     ax.plot(times, bound, color="#c0504d", lw=1.2, label="Early-exercise boundary b(t)")
     ax.axhline(K, color="grey", ls="--", lw=0.8, label=f"Strike K = P0 = {K:,.0f}")
@@ -46,7 +46,8 @@ def plot(label):
     ax.set_ylabel("US dollars (USDT) per BTC")
     ax.set_ylim(0, max(price) * 1.05)
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
-    ax.legend(loc="lower left", fontsize=8)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.08), ncol=2, fontsize=8,
+              frameon=False)      # below the plot: never hides the price path
     ax.grid(alpha=0.3)
     fig.tight_layout()
     for ext in ("png", "pdf"):
