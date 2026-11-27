@@ -20,6 +20,13 @@ MAX_POINTS = 4000                      # chart points per line (every k-th hour 
 
 st.set_page_config(page_title="Class 3: PriceAmericanPut", layout="wide")
 
+def metric(col, label, value, note=None):
+    """A number with an optional grey note below it (no arrow: the note is not a change)."""
+    col.metric(label, value)
+    if note:
+        col.caption(note)
+
+
 
 @st.cache_data
 def load():
@@ -65,15 +72,16 @@ tabs = st.tabs(["Overview", "Runtime", "Memory", "Bitcoin", "All 40 assets",
 with tabs[0]:
     b1, b5 = d["btc"].iloc[0], d["btc"].iloc[1]
     c = st.columns(4)
-    c[0].metric("Bitcoin put, one year", f"{b1.american_value:,.0f} USDT",
-                f"{b1.american_pct_of_S0:.1f} % of S0", delta_color="off")
-    c[1].metric("Early-exercise premium, one year", f"{b1.early_exercise_premium:,.0f} USDT",
-                f"{b1.premium_pct_of_american:.1f} % of the value", delta_color="off")
-    c[2].metric("numpy vs plain Python, five years",
-                f"{sec('bitcoin_5y', 'plain') / sec('bitcoin_5y', 'numpy'):.0f} × faster")
+    metric(c[0], "Bitcoin put, one year", f"{b1.american_value:,.0f} USDT",
+           f"{b1.american_pct_of_S0:.1f} % of S0")
+    metric(c[1], "Early-exercise premium, one year", f"{b1.early_exercise_premium:,.0f} USDT",
+           f"{b1.premium_pct_of_american:.1f} % of the value")
+    metric(c[2], "numpy vs plain Python, five years",
+           f"{sec('bitcoin_5y', 'plain') / sec('bitcoin_5y', 'numpy'):.0f} × faster",
+           "same prices, measured on Bitcoin")
     mem4000 = d["mem"][d["mem"].N == 4000].set_index("version").peak_traced_bytes
-    c[3].metric("Full tree at N = 4,000", f"{mem4000['full_tree'] / 1e6:,.0f} MB",
-                f"two arrays: {mem4000['two_arrays_numpy'] / 1e6:.2f} MB", delta_color="off")
+    metric(c[3], "Full tree at N = 4,000", f"{mem4000['full_tree'] / 1e6:,.0f} MB",
+           f"two arrays: {mem4000['two_arrays_numpy'] / 1e6:.2f} MB")
     st.markdown(
         "**Contract**: American put written at the first hourly close and expiring at the "
         "last, strike = first close (at the money), exercisable every hour. **Tree**: one "
@@ -183,10 +191,10 @@ with tabs[3]:
     c = st.columns(4)
     c[0].metric("American put", f"{row.american_value:,.2f}")
     c[1].metric("European put", f"{row.european_value:,.2f}")
-    c[2].metric("Early-exercise premium", f"{row.early_exercise_premium:,.2f}",
-                f"{row.premium_pct_of_american:.1f} % of the American value", delta_color="off")
-    c[3].metric("First exercise", str(row.exercise_time)[:16].replace("T", " ") if bool(row.exercised) else "never",
-                f"payoff {row.exercise_payoff:,.2f}" if bool(row.exercised) else None, delta_color="off")
+    metric(c[2], "Early-exercise premium", f"{row.early_exercise_premium:,.2f}",
+           f"{row.premium_pct_of_american:.1f} % of the American value")
+    metric(c[3], "First exercise", str(row.exercise_time)[:16].replace("T", " ") if bool(row.exercised) else "never",
+           f"payoff {row.exercise_payoff:,.2f}" if bool(row.exercised) else None)
     st.image(str(RES / f"btc_{lab}_boundary.png"),
              caption="Static figure from plot_btc.py (all hours drawn)")
 
